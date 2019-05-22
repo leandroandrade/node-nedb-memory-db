@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use('/', require('./routes/index'));
-app.use('/users', require('./routes/save-user'));
-app.use('/users', require('./routes/search-all-users'));
+app.use('/users', require('./routes/users'));
 
 module.exports = app;

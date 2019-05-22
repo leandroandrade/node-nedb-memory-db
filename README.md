@@ -1,4 +1,4 @@
-# node-essential
+# node-nedb-memory-db
 Nodejs project using NeDB (memory database).
 
 Installation:

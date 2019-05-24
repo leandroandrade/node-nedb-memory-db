@@ -1,19 +1,22 @@
 'use strict';
 
-const db = require('../database/db');
-
 const uuid = require('uuid/v4');
 
-exports.save = async (req, res) => {
-    const newUser = req.body;
+module.exports = (db) => {
 
-    newUser.uuid = uuid();
+    async function save(req, res) {
+        const newUser = req.body;
 
-    const user = await db.getUserDB().insert(newUser);
+        newUser.uuid = uuid();
 
-    delete user._id;
+        const user = await db.getUserDB().insert(newUser);
 
-    res.status(201).send({
-        user
-    });
+        delete user._id;
+
+        return res.status(201).send({ user });
+    }
+
+    return {
+        save
+    };
 };

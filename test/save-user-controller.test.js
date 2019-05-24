@@ -6,22 +6,24 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const app = require('../src/app');
+const db = require('../src/database/db')('users.test.db');
+const app = require('../src/app')(db);
 
 describe('save user', function () {
-    it('should save user', function () {
+    it('should save user', (done) => {
 
-        const user = { "username": "paul.phoenix", "password": "123456" };
+        const newUser = { "username": "ivan.phoenix", "password": "123456" };
 
         chai.request(app)
             .post('/users')
-            .send(user)
+            .send(newUser)
             .end((err, res) => {
                 expect(res.statusCode).to.equal(201);
 
-                const newUser = res.body;
-                expect(newUser).to.not.have.property('uuid');
+                const { user } = res.body;
+                expect(user).to.have.property('uuid');
 
+                done();
             })
     });
 });

@@ -6,10 +6,11 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-const app = require('../src/app');
+const db = require('../src/database/db')('./test/users.test.db');
+const app = require('../src/app')(db);
 
 describe('get users', function () {
-    it('should return all users', function () {
+    it('should return all users', (done) => {
 
         chai.request(app)
             .get('/users')
@@ -19,10 +20,12 @@ describe('get users', function () {
                 const payload = res.body;
 
                 expect(payload).to.be.an('object');
+
+                done();
             })
     });
 
-    it('should return all property users', function () {
+    it('should return all property users', (done) => {
 
         chai.request(app)
             .get('/users')
@@ -39,6 +42,8 @@ describe('get users', function () {
                     expect(user).to.not.have.property('password');
                     expect(user).to.not.have.property('uuid');
                 }
+
+                done();
 
             })
     });

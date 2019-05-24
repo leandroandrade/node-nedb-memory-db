@@ -1,6 +1,7 @@
 'use strict';
+const db = require('./src/database/db')('users.db');
 
-const app = require('./src/app');
+const app = require('./src/app')(db);
 
 const port = process.env.PORT || '3000';
 

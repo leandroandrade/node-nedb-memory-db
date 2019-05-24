@@ -2,21 +2,21 @@
 
 const uuid = require('uuid/v4');
 
+const generateUUID = () => uuid();
+
 module.exports = (db) => {
 
-    async function save(req, res) {
-        const newUser = req.body;
-
-        newUser.uuid = uuid();
-
-        const user = await db.getUserDB().insert(newUser);
-
-        delete user._id;
-
-        return res.status(201).send({ user });
-    }
-
     return {
-        save
+        save: async (req, res) => {
+            const newUser = req.body;
+
+            newUser.uuid = generateUUID();
+
+            const user = await db.getUserDB().insert(newUser);
+
+            delete user._id;
+
+            res.status(201).send({ user });
+        }
     };
 };

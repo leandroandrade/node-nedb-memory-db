@@ -1,11 +1,10 @@
 'use strict';
 
-const db = require('../database/db');
+module.exports = (db) => ({
 
-exports.all = async (req, res) => {
-    const users = await db.getUserDB().find({}, { _id: 0 }).sort({ username: 1 }).exec();
+    all: async (req, res) => {
+        const users = await db.getUserDB().find({}, { _id: 0 }).sort({ username: 1 }).exec();
 
-    res.status(200).send({
-        users
-    });
-};
+        res.status(200).send({ users });
+    }
+});

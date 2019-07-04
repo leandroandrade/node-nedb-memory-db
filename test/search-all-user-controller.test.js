@@ -1,50 +1,47 @@
 'use strict';
 
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const expect = chai.expect;
+const request = require('supertest');
 
-chai.use(chaiHttp);
-
-const db = require('../src/database/db')('./test/users.test.db');
+const db = require('../src/database/db')('users.test.db');
 const app = require('../src/app')(db);
 
 describe('get users', function () {
     it('should return all users', (done) => {
 
-        chai.request(app)
+        request(app)
             .get('/users')
-            .end((err, res) => {
-                expect(res.statusCode).to.equal(200);
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
 
-                const payload = res.body;
+                const { users } = res.body;
+                expect(users).not.toBeNull();
+                expect(users).not.toBeUndefined();
 
-                expect(payload).to.be.an('object');
+                const size = users.length;
+                expect(size).not.toBe(0);
 
-                done();
-            })
+                return done();
+            });
     });
 
     it('should return all property users', (done) => {
 
-        chai.request(app)
+        request(app)
             .get('/users')
-            .end((err, res) => {
-                expect(res.statusCode).to.equal(200);
+            .expect(200)
+            .end(function (err, res) {
+                if (err) return done(err);
 
-                const payload = res.body;
-                expect(payload).to.be.an('object');
+                const { users } = res.body;
 
-                const { users } = payload;
+                users.forEach(u => {
+                    expect(u).toHaveProperty('username');
+                    expect(u).toHaveProperty('password');
+                    expect(u).toHaveProperty('uuid');
+                });
 
-                for (const user in users) {
-                    expect(user).to.not.have.property('username');
-                    expect(user).to.not.have.property('password');
-                    expect(user).to.not.have.property('uuid');
-                }
-
-                done();
-
-            })
+                return done();
+            });
     });
 });
